@@ -1,15 +1,9 @@
 import pandas as pd
 import numpy as np
-import os
 import zipfile
 import re
-import spacy
-import seaborn as sns
-import matplotlib.pyplot as plt 
 import hashlib
 
-
-from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -17,10 +11,7 @@ ZIP_PATH = "data/legislatives.zip"
 
 data = pd.read_csv("data/metadonnees.csv")
 data["date"] = pd.to_datetime(data["date"])
-
-data[["annee","mois","jour"]] = data["date"].apply(
-    lambda x: pd.Series([x.year, x.month, x.day])
-)
+data[["annee","mois","jour"]] = data["date"].apply(lambda x: pd.Series([x.year, x.month, x.day]))
 
 
 def classifier_parti(etiquette_brute):
@@ -122,8 +113,7 @@ def nettoyage_profession_foi(texte):
         return ""
     
     texte = re.sub(r'[\u2600-\u26FF\u2700-\u27BF\u25A0-\u25FF]', ' ', texte)
-    #texte = re.sub(r'[A-Z]{4,}\s[A-Z]{4,}', '', texte) 
-
+    
     # Enlever les 'ELECTIONS LEGISLATIVES'
     texte = re.sub(r'ÉLECTIONS\s[A-Z\s]+-\s[A-Z]+\s\d{4}', '', texte, flags=re.IGNORECASE)
 
@@ -222,6 +212,7 @@ def resumer_resultats(resultats):
             "taux_similarite" : round(res["nb_paires_similaires"] / (res["nb_textes"]**2-res["nb_textes"]), 2)
         })
     return pd.DataFrame(rows).sort_values("nb_paires_similaires", ascending=False)
+
 
 docs = []
 
