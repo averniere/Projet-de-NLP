@@ -8,3 +8,4 @@ seqeval
 plotly
 matplotlib
 ftfy
+wordcloud
